@@ -9,6 +9,8 @@ namespace CSharp2Sql {
             conn.Open();
             Users.Connection = conn;
             var users = Users.GetAll();
+            var user = Users.GetByPk(3);
+            var usernf = Users.GetByPk(12);
             conn.Close();
         }
 
