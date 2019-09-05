@@ -8,6 +8,23 @@ namespace CSharp2SqlLibrary {
 
             public static Connection Connection { get; set; }
 
+        public static Users Login(string username, string password) {
+            var sql = "SELECT * FROM Users WHERE Username = @Username AND Password = @Password";
+            var sqlcmd = new SqlCommand(sql, Connection._Connection);
+            sqlcmd.Parameters.AddWithValue("@Username", username);
+            sqlcmd.Parameters.AddWithValue("@Password", password);
+            var reader = sqlcmd.ExecuteReader();
+            if (!reader.HasRows) {
+                reader.Close();
+                return null;
+            }
+            reader.Read();
+            var user = new Users();
+            LoadUserFromSql(user, reader);
+            reader.Close();
+            return user;
+        }
+
         public static Users GetByPk(int id){
             //command object
             var sql = "SELECT * FROM Users WHERE ID = @Id"; // @id is a parameter this allows you to avoid SQL Injection
@@ -17,20 +34,12 @@ namespace CSharp2SqlLibrary {
             //execute reader
             var reader = sqlcmd.ExecuteReader();
             if (!reader.HasRows) {
+                reader.Close();
                 return null;
             }
             reader.Read();
             var user = new Users();
-
-            user.ID = (int)reader["ID"];
-            user.Username = reader["Username"].ToString();
-            user.Password = reader["Password"].ToString();
-            user.FirstName = reader["FirstName"].ToString();
-            user.LastName = reader["LastName"].ToString();
-            user.Phone = reader["Phone"]?.ToString();
-            user.Email = reader["Email"]?.ToString();
-            user.IsReviewer = (bool)reader["IsReviewer"];
-            user.IsAdmin = (bool)reader["IsAdmin"];
+            LoadUserFromSql(user, reader);
 
             //close data reader... will not work without this
             reader.Close();
@@ -45,19 +54,23 @@ namespace CSharp2SqlLibrary {
             while(reader.Read()) {
                 var user = new Users();
                 users.Add(user);
-               
-                user.ID = (int)reader["ID"];
-                user.Username = reader["Username"].ToString();
-                user.Password = reader["Password"].ToString();
-                user.FirstName = reader["FirstName"].ToString();
-                user.LastName = reader["LastName"].ToString();
-                user.Phone = reader["Phone"]?.ToString(); 
-                user.Email = reader["Email"]?.ToString();
-                user.IsReviewer = (bool)reader["IsReviewer"];
-                user.IsAdmin = (bool)reader["IsAdmin"];
+                LoadUserFromSql(user, reader);
             }
             reader.Close();
             return users;
+
+        }
+        //creating method to avoid duplicating code
+        private static void LoadUserFromSql(Users user, SqlDataReader reader) {
+            user.ID = (int)reader["ID"];
+            user.Username = reader["Username"].ToString();
+            user.Password = reader["Password"].ToString();
+            user.FirstName = reader["FirstName"].ToString();
+            user.LastName = reader["LastName"].ToString();
+            user.Phone = reader["Phone"]?.ToString();
+            user.Email = reader["Email"]?.ToString();
+            user.IsReviewer = (bool)reader["IsReviewer"];
+            user.IsAdmin = (bool)reader["IsAdmin"];
         }
 
             public int ID { get; private set; }
