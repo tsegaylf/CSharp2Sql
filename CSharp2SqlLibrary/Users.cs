@@ -8,7 +8,62 @@ namespace CSharp2SqlLibrary {
 
             public static Connection Connection { get; set; }
 
-        public static Users Login(string username, string password) {
+        public static bool Update(Users user) {
+            var sql = "Update Users Set " +
+                " Username = @Username, " +
+                " Password = @Password, " +
+                " FirstName = @FirstName," +
+                " LastName = @LastName, " +
+                " Phone = @Phone, " +
+                " Email = @Email, " +
+                " IsAdmin = @IsAdmin, " +
+                " IsReviewer = @IsReviewer " + //this is the only one that doesn't have a comma
+                " WHERE ID = @Id";
+            var sqlcmd = new SqlCommand(sql, Connection._Connection);
+            sqlcmd.Parameters.AddWithValue("@Username", user.Username);
+            sqlcmd.Parameters.AddWithValue("@Password", user.Password);
+            sqlcmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+            sqlcmd.Parameters.AddWithValue("@LastName", user.LastName);
+            sqlcmd.Parameters.AddWithValue("@Phone", user.Phone); //  if phone is null use ==>("@Phone", (object)user.Phone ?? DBNULL.Value);)
+            sqlcmd.Parameters.AddWithValue("@Email", user.Email); //  if email is null use ==>("@Email", (object)user.Email ?? DBNULL.Value);)
+            sqlcmd.Parameters.AddWithValue("@IsAdmin", user.IsAdmin);
+            sqlcmd.Parameters.AddWithValue("@IsReviewer", user.IsReviewer);
+            sqlcmd.Parameters.AddWithValue("@Id", user.ID);
+            var rowsAffected = sqlcmd.ExecuteNonQuery();
+            return rowsAffected == 1;
+
+        }
+
+        public static bool Insert(Users user) {
+            var sql = "INSERT into Users" +
+                "(Username, Password, FirstName, LastName, Phone, Email, IsAdmin, IsReviewer)" +
+                "VALUES" +
+                "(@Username, @Password, @FirstName, @LastName, @Phone, @Email, @IsReviewer, @IsAdmin)"; //same as below
+                //$"({user.Username}, {user.Password}, {user.FirstName}, {user.LastName}, {user.Phone}, " +
+                //$"{user.Email}, {user.IsAdmin}, {user.IsReviewer})" 
+            var sqlcmd = new SqlCommand(sql, Connection._Connection);
+            sqlcmd.Parameters.AddWithValue("@Username", user.Username);
+            sqlcmd.Parameters.AddWithValue("@Password", user.Password);
+            sqlcmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+            sqlcmd.Parameters.AddWithValue("@LastName", user.LastName);
+            sqlcmd.Parameters.AddWithValue("@Phone", user.Phone); //  if phone is null use ==>("@Phone", (object)user.Phone ?? DBNULL.Value);)
+            sqlcmd.Parameters.AddWithValue("@Email", user.Email); //  if email is null use ==>("@Email", (object)user.Email ?? DBNULL.Value);)
+            sqlcmd.Parameters.AddWithValue("@IsAdmin", user.IsAdmin);
+            sqlcmd.Parameters.AddWithValue("@IsReviewer", user.IsReviewer);
+            var rowsAffected = sqlcmd.ExecuteNonQuery();
+            return rowsAffected == 1;
+
+        }
+
+        public static bool Delete(int id) {
+            var sql = "DELETE FROM Users WHERE ID =@Id;";
+            var sqlcmd = new SqlCommand(sql, Connection._Connection);
+            sqlcmd.Parameters.AddWithValue("@Id", id);
+            var rowsAffected = sqlcmd.ExecuteNonQuery();
+            return rowsAffected == 1;
+        }
+
+    public static Users Login(string username, string password) {
             var sql = "SELECT * FROM Users WHERE Username = @Username AND Password = @Password";
             var sqlcmd = new SqlCommand(sql, Connection._Connection);
             sqlcmd.Parameters.AddWithValue("@Username", username);
