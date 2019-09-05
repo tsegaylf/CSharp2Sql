@@ -1,5 +1,6 @@
 ﻿using System;
 using CSharp2SqlLibrary;
+using System.Diagnostics;
 
 namespace CSharp2Sql {
     class Program {
@@ -9,9 +10,15 @@ namespace CSharp2Sql {
             conn.Open();
             Users.Connection = conn;
             var userLogin = Users.Login("John1234", "John1234");
+            Console.WriteLine(userLogin);
             var userFailedLogin = Users.Login("xx", "Xx");
+            Console.WriteLine(userFailedLogin?.ToString() ?? "Not Found"); //assigning a string for a null value
             var users = Users.GetAll();
-            var user = Users.GetByPk(3);
+            foreach(var usser in users) {
+                Console.WriteLine(usser);
+            }
+            var user = Users.GetByPk(3);//how to display things without a consol
+            Debug.WriteLine(user); //have to set a using statement for System.Diagnostics
             var usernf = Users.GetByPk(12);
             conn.Close();
         }

@@ -86,5 +86,10 @@ namespace CSharp2SqlLibrary {
         public Users() {
 
         }
+
+        public override string ToString() {
+            return $"ID={ID}, Username={Username}, Password={Password}, " +
+                $"Name={FirstName} {LastName}, Admin?={IsAdmin}, Reviewer={IsReviewer}";
+        }
     }
 }
