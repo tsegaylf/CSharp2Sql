@@ -7,6 +7,8 @@ namespace CSharp2Sql {
         void Run() {
             var conn = new Connection(@"localhost\sqlexpress", "PrsDB");
             conn.Open();
+            Users.Connection = conn;
+            var users = Users.GetAll();
             conn.Close();
         }
 
