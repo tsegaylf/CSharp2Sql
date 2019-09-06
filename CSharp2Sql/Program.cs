@@ -5,7 +5,28 @@ using System.Diagnostics;
 namespace CSharp2Sql {
     class Program {
 
-        void Run() {
+        void RunVendorsTest() {
+
+            var conn = new Connection(@"localhost\sqlexpress", "PrsDB");
+            conn.Open();
+            Vendors.Connection = conn;
+
+            var vendors = Vendors.GetAll();
+            foreach (var v in vendors) {
+                Console.WriteLine(v.Name);
+
+
+
+
+            }
+
+            conn.Close();
+
+        }
+
+
+
+        void RunUsersTest() {
             var conn = new Connection(@"localhost\sqlexpress", "PrsDB");
             conn.Open();
             Users.Connection = conn;
@@ -25,30 +46,32 @@ namespace CSharp2Sql {
             Debug.WriteLine(user3);
             //conn.Close(); // can only have one conn.Close(); in program 
 
-            //INSERT USER
-            var newuser = new Users();
-            newuser.Username = "Angela349";
-            newuser.Password = "Angela3499";
-            newuser.FirstName = "Angela";
-            newuser.LastName = "Jacobs";
-            newuser.Phone = "493-305-9803";
-            newuser.Email = "Angela@gmail.com";
-            newuser.IsReviewer = false;
-            newuser.IsAdmin = true;
-            success = Users.Insert(newuser);
+            ////INSERT USER
+            //var newuser = new Users();
+            //newuser.Username = "Kelly568";
+            //newuser.Password = "Kelly568";
+            //newuser.FirstName = "Kelly";
+            //newuser.LastName = "Mitchel";
+            //newuser.Phone = "763-105-2303";
+            //newuser.Email = "Kelly@gmail.com";
+            //newuser.IsReviewer = false;
+            //newuser.IsAdmin = true;
+            //success = Users.Insert(newuser);
             //conn.Close();
 
-            //UPDATE USER
-            var userAngela = Users.GetByPk(9);
-            userAngela.Password = "Angela444";
-            userAngela.Phone = "394-309-8888";
-            success = Users.Update(userAngela);
-            //conn.Close();
+            ////UPDATE USER
+            //var userAngela = Users.GetByPk(9);
+            //userAngela.Password = "Angela444";
+            //userAngela.Phone = "394-309-8888";
+            //success = Users.Update(userAngela);
+            ////conn.Close();
+            ///
+
         }
 
         static void Main(string[] args) {
             var pgm = new Program();
-            pgm.Run();
+            pgm.RunVendorsTest();
         }
 
     }
