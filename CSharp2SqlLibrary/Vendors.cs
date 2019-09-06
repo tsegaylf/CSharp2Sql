@@ -8,6 +8,7 @@ namespace CSharp2SqlLibrary {
 
         public static Connection Connection { get; set; }
 
+        #region SQL Statements
         private const string SqlGetAll = "SELECT * From Vendors ";
         private const string SqlGetByPk = SqlGetAll + "WHERE ID = @Id ";
         private const string SqlDelete = "DELETE FROM Vendors WHERE ID = @Id ";
@@ -18,6 +19,7 @@ namespace CSharp2SqlLibrary {
         private const string SqlInsert = "INSERT into Vendors" +
             " (Code, Name, Address, City, State, Zip, Phone, Email) " +
             " VALUES (@Code, @Name, @Address, @City, @State, @Zip, @Phone, @Email) ";
+        #endregion
 
         public static List<Vendors> GetAll() {
             var sqlcmd = new SqlCommand(SqlGetAll, Connection.sqlConnection);
@@ -69,7 +71,7 @@ namespace CSharp2SqlLibrary {
             return rowsAffected == 1;
         }
 
-            private static void SetParameterValues(Vendors vendor, SqlCommand sqlcmd) {
+        private static void SetParameterValues(Vendors vendor, SqlCommand sqlcmd) {
             sqlcmd.Parameters.AddWithValue("@Id", vendor.ID);
             sqlcmd.Parameters.AddWithValue("@Code", vendor.Code);
             sqlcmd.Parameters.AddWithValue("@Name", vendor.Name);
@@ -110,7 +112,6 @@ namespace CSharp2SqlLibrary {
             return $"ID={ID}, Code={Code}, Name={Name}, Address={Address}, " +
                 $"City={City}, State={State}, Phone={Phone}";
         }
-
 
         }
 }

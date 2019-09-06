@@ -51,9 +51,50 @@ namespace CSharp2SqlLibrary {
                 reader.Read();
                 var product = new Products();
                 LoadProductFromSql(product, reader);
+
                 reader.Close();
+
+            Vendors.Connection = Connection;
+            var vendor = Vendors.GetByPk(product.VendorID);
+            product.Vendor = vendor;
+
                 return product;
             }
+
+        //Need to create GetByCode 
+
+        // need to include product.VendorID
+        //public static bool Insert(Products product) {
+        //    var sqlcmd = new SqlCommand(SqlInsert, Connection.sqlConnection);
+        //    SetParameterValues(product, sqlcmd);
+        //    var rowsAffected = sqlcmd.ExecuteNonQuery();
+        //    return rowsAffected == 1;
+        //}
+
+        //public static bool Delete(int id) {
+        //    var sqlcmd = new SqlCommand(SqlDelete, Connection.sqlConnection);
+        //    var rowsAffected = sqlcmd.ExecuteNonQuery();
+        //    return rowsAffected == 1;
+        //}
+
+        //public static bool Update(Products product) {
+        //    var sqlcmd = new SqlCommand(SqlUpdate, Connection.sqlConnection);
+        //    SetParameterValues(product, sqlcmd);
+        //    var rowsAffected = sqlcmd.ExecuteNonQuery();
+        //    return rowsAffected == 1;
+        //}
+
+        //private static void SetParameterValues(Vendors vendor, SqlCommand sqlcmd) {
+        //    sqlcmd.Parameters.AddWithValue("@Id", vendor.ID);
+        //    sqlcmd.Parameters.AddWithValue("@Code", vendor.Code);
+        //    sqlcmd.Parameters.AddWithValue("@Name", vendor.Name);
+        //    sqlcmd.Parameters.AddWithValue("@Address", vendor.Address);
+        //    sqlcmd.Parameters.AddWithValue("@City", vendor.City);
+        //    sqlcmd.Parameters.AddWithValue("@State", vendor.State);
+        //    sqlcmd.Parameters.AddWithValue("@Zip", vendor.Zip);
+        //    sqlcmd.Parameters.AddWithValue("@Phone", vendor.Phone);
+        //    sqlcmd.Parameters.AddWithValue("@Email", vendor.Email);
+        //}
 
         private static void LoadProductFromSql(Products product, SqlDataReader reader) {
             product.ID = (int)reader["Id"];

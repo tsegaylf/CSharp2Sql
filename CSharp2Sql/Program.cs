@@ -11,9 +11,12 @@ namespace CSharp2Sql {
             conn.Open();
             Products.Connection = conn;
 
+            var echo = Products.GetByPK(1);
+            Console.WriteLine($"Product {echo.Name} from Vendor {echo.Vendor.Name} is priced at {echo.Price}");
+
             var products = Products.GetAll();
             foreach (var p in products) {
-                Console.WriteLine(p.Name);
+                //Console.WriteLine($"Product {p.Name} from Vendor {p.Vendor.Name} is priced at {p.Price}");
             }
         }
 
