@@ -14,17 +14,41 @@ namespace CSharp2Sql {
             var vendors = Vendors.GetAll();
             foreach (var v in vendors) {
                 Console.WriteLine(v.Name);
-
-
-
-
             }
+
+            //GET VENDOR BY PK
+            var vendor = Vendors.GetByPk(3);
+            Debug.WriteLine(vendor);
+
+            ////DELETE VENDOR
+            //var success = Vendors.Delete(18);
+            //var vendor1 = Vendors.GetByPk(18);
+            //Debug.WriteLine(vendor1);
+
+            ////INSERT VENDOR
+            //var newvendor = new Vendors();
+            //newvendor.Code = "6666";
+            //newvendor.Name = "Amazon";
+            //newvendor.Address = "48673 Amazon Ln";
+            //newvendor.City = "Seattle";
+            //newvendor.State = "WA";
+            //newvendor.Zip = "87645";
+            //newvendor.Phone = "235-605-2363";
+            //newvendor.Email = "Amazon@amazon.com";
+            //var success = Vendors.Insert(newvendor);
+
+            ////UPDATE VENDOR
+            var vendorAmazon = Vendors.GetByPk(14);
+            vendorAmazon.Code = "7444";
+            vendorAmazon.Phone = "394-309-8888";
+            var success = Vendors.Update(vendorAmazon);
+
+
+
 
             conn.Close();
 
         }
-
-
 
         void RunUsersTest() {
             var conn = new Connection(@"localhost\sqlexpress", "PrsDB");
