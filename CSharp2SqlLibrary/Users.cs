@@ -6,7 +6,7 @@ using System.Text;
 namespace CSharp2SqlLibrary {
     public class Users {
 
-            public static Connection Connection { get; set; }
+        public static Connection Connection { get; set; }
         //private const string SqlGetAll = "SELECT * From Users;";
         //private const string SqlGetByPk = SqlGetAll + "WHERE ID = @Id";
         //private const string SqlDelete = "DELETE FROM Users WHERE ID = @Id";

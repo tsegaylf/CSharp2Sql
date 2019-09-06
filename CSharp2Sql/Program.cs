@@ -5,6 +5,19 @@ using System.Diagnostics;
 namespace CSharp2Sql {
     class Program {
 
+        void RunProductsTest() {
+
+            var conn = new Connection(@"localhost\sqlexpress", "PrsDB");
+            conn.Open();
+            Products.Connection = conn;
+
+            var products = Products.GetAll();
+            foreach (var p in products) {
+                Console.WriteLine(p.Name);
+            }
+        }
+
+
         void RunVendorsTest() {
 
             var conn = new Connection(@"localhost\sqlexpress", "PrsDB");
@@ -95,7 +108,7 @@ namespace CSharp2Sql {
 
         static void Main(string[] args) {
             var pgm = new Program();
-            pgm.RunVendorsTest();
+            pgm.RunProductsTest();
         }
 
     }

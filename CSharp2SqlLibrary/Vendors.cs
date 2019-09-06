@@ -12,11 +12,12 @@ namespace CSharp2SqlLibrary {
         private const string SqlGetByPk = SqlGetAll + "WHERE ID = @Id ";
         private const string SqlDelete = "DELETE FROM Vendors WHERE ID = @Id ";
         private const string SqlUpdate = "UPDATE Vendors Set" +
-            "Code = @Code, Name = @Name, Address = @Address, City = @City, State = @State, Zip = @Zip, Phone = @Phone, Email = @Email" +
-            "WHERE ID = @Id ";
+            " Code = @Code, Name = @Name, Address = @Address, City = @City, " +
+            " State = @State, Zip = @Zip, Phone = @Phone, Email = @Email " +
+            " WHERE ID = @Id ";
         private const string SqlInsert = "INSERT into Vendors" +
-            "(Code, Name, Address, City, State, Zip, Phone, Email)" +
-            "VALUES (@Code, @Name, @Address, @City, @State, @Zip, @Phone, @Email)";
+            " (Code, Name, Address, City, State, Zip, Phone, Email) " +
+            " VALUES (@Code, @Name, @Address, @City, @State, @Zip, @Phone, @Email) ";
 
         public static List<Vendors> GetAll() {
             var sqlcmd = new SqlCommand(SqlGetAll, Connection.sqlConnection);
@@ -55,7 +56,7 @@ namespace CSharp2SqlLibrary {
 
         public static bool Delete(int id) {
             var sqlcmd = new SqlCommand(SqlDelete, Connection.sqlConnection);
-            sqlcmd.Parameters.AddWithValue("@ID", id);
+            sqlcmd.Parameters.AddWithValue("@Id", id);
             var rowsAffected = sqlcmd.ExecuteNonQuery();
             return rowsAffected == 1;
         }
@@ -63,7 +64,7 @@ namespace CSharp2SqlLibrary {
         public static bool Update(Vendors vendor) {
             var sqlcmd = new SqlCommand(SqlUpdate, Connection.sqlConnection);
             SetParameterValues(vendor, sqlcmd);
-            sqlcmd.Parameters.AddWithValue("@Id", vendor.ID);
+            //sqlcmd.Parameters.AddWithValue("@Id", vendor.ID);
             var rowsAffected = sqlcmd.ExecuteNonQuery();
             return rowsAffected == 1;
         }
