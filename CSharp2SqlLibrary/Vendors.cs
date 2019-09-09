@@ -10,7 +10,8 @@ namespace CSharp2SqlLibrary {
 
         #region SQL Statements
         private const string SqlGetAll = "SELECT * From Vendors ";
-        private const string SqlGetByPk = SqlGetAll + "WHERE ID = @Id ";
+        private const string SqlGetByPk = SqlGetAll + " WHERE ID = @Id ";
+        private const string SQLGetByCode = SqlGetAll + " WHERE Code = @Code ";
         private const string SqlDelete = "DELETE FROM Vendors WHERE ID = @Id ";
         private const string SqlUpdate = "UPDATE Vendors Set" +
             " Code = @Code, Name = @Name, Address = @Address, City = @City, " +
@@ -19,6 +20,9 @@ namespace CSharp2SqlLibrary {
         private const string SqlInsert = "INSERT into Vendors" +
             " (Code, Name, Address, City, State, Zip, Phone, Email) " +
             " VALUES (@Code, @Name, @Address, @City, @State, @Zip, @Phone, @Email) ";
+        private const string SqlGetProducts = " Declare @code nvarchar(4) = 2345 " +
+            " SELECT * FROM Products " +
+            " WHERE VendorID = (Select ID From Vendors Where code = @Code) ";
         #endregion
 
         public static List<Vendors> GetAll() {
@@ -47,6 +51,36 @@ namespace CSharp2SqlLibrary {
             LoadVendorFromSql(vendor, reader);
             reader.Close();
             return vendor;
+        }
+
+        public static Vendors GetByCode(string code) {
+            var sqlcmd = new SqlCommand(SQLGetByCode, Connection.sqlConnection);
+            sqlcmd.Parameters.AddWithValue("@Code", code);
+            var reader = sqlcmd.ExecuteReader();
+            if (!reader.HasRows) {
+                reader.Close();
+                return null;
+            }
+            reader.Read();
+            var vendor = new Vendors();
+            LoadVendorFromSql(vendor, reader);
+
+            reader.Close();
+            return vendor;
+        }
+
+        public static List<Products> GetProducts(string code) {
+            var sqlcmd = new SqlCommand(SqlGetProducts, Connection.sqlConnection);
+            sqlcmd.Parameters.AddWithValue("@Code", code);
+            var reader = sqlcmd.ExecuteReader();
+            var products = new List<Products>();
+            while (reader.Read()) {
+                var product = new Products();
+                products.Add(product);
+                Products.LoadProductFromSql(product, reader);
+                    }
+            reader.Close();
+            return products;
         }
 
         public static bool Insert(Vendors vendor) {

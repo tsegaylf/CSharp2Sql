@@ -10,32 +10,25 @@ namespace CSharp2Sql {
             var conn = new Connection(@"localhost\sqlexpress", "PrsDB");
             conn.Open();
             Products.Connection = conn;
-
-            var echo = Products.GetByPK(1);
-            Console.WriteLine($"Product {echo.Name} from Vendor {echo.Vendor.Name} is priced at {echo.Price}");
-
-            var products = Products.GetAll();
-            foreach (var p in products) {
-                //Console.WriteLine($"Product {p.Name} from Vendor {p.Vendor.Name} is priced at {p.Price}");
-            }
+            Vendors.Connection = conn;
 
             var product = new Products() {
-                    PartNbr = "DT52M",
-                    Name = "Digi Screen",
-                    Price = 22,
-                    Unit = "Each",
-                    PhotoPath = null,
-                    VendorID = 1};
+                    PartNbr = "IE54W", Name = "Cup", Price = 6, Unit = "Each", PhotoPath = null,
+                    VendorID = Vendors.GetByCode("Max Train").ID
+            };
             try {
-                ////INSERT
-                ////var success = Products.Insert(product);
-                ////Update
-                var p = Products.GetByPK(2);
-                p.PartNbr = "4RDF3";
-                var success = Products.Update(p);
-                ////delete
-                //var success = Products.Delete(1);
+
+                var success = Products.Insert(product);
+                //var p = Products.GetByPartNbr("IE54W");
+                //p.Name = "Cup";
+                //p.VendorID = Vendors.GetByCode("Max Train").ID;
+                //success = Products.Update(p);
+                ////////delete
+                //////var success = Products.Delete(6);
+                //p = Products.GetByPartNbr("IE54W");
+                //Console.WriteLine(p);
             }
+
             catch (Exception ex) {
                 Console.WriteLine($"Exception Occured: {ex.Message}");
             }
@@ -59,8 +52,9 @@ namespace CSharp2Sql {
             }
 
             //GET VENDOR BY PK
-            var vendor = Vendors.GetByPk(3);
-            Debug.WriteLine(vendor);
+            //var vendor = Vendors.GetByPk(3);
+            //Debug.WriteLine(vendor);
+
 
             ////DELETE VENDOR
             //var success = Vendors.Delete(18);
@@ -79,11 +73,11 @@ namespace CSharp2Sql {
             //newvendor.Email = "Amazon@amazon.com";
             //var success = Vendors.Insert(newvendor);
 
-            ////UPDATE VENDOR
-            var vendorAmazon = Vendors.GetByPk(14);
-            vendorAmazon.Code = "7444";
-            vendorAmazon.Phone = "394-309-8888";
-            var success = Vendors.Update(vendorAmazon);
+            //////UPDATE VENDOR
+            //var vendorAmazon = Vendors.GetByPk(14);
+            //vendorAmazon.Code = "7444";
+            //vendorAmazon.Phone = "394-309-8888";
+            //var success = Vendors.Update(vendorAmazon);
 
 
 

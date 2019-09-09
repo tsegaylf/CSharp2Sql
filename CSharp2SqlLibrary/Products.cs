@@ -11,6 +11,7 @@ namespace CSharp2SqlLibrary {
         #region SQL Statements
         private const string SqlGetAll = "SELECT * From Products ";
         private const string SqlGetByPk = SqlGetAll + "WHERE ID = @Id ";
+        private const string SqlGetByPartNbr = SqlGetAll + " Where PartNbe = @PartNbr ";
         private const string SqlDelete = "DELETE FROM Products WHERE ID = @Id ";
         private const string SqlUpdate = "UPDATE Products Set " +
             " PartNbr = @PartNbr, Name = @Name, Price = @Price, Unit = @Unit, PhotoPath = @PhotoPath, VendorID = @VendorID " +
@@ -40,9 +41,9 @@ namespace CSharp2SqlLibrary {
             
         }
 
-        public static Products GetByPK(int id) {
+        public static Products GetByPartNbr(string partNbr) {
                 var sqlcmd = new SqlCommand(SqlGetByPk, Connection.sqlConnection);
-                sqlcmd.Parameters.AddWithValue("@Id", id);
+                sqlcmd.Parameters.AddWithValue("@PartNbr", partNbr);
                 var reader = sqlcmd.ExecuteReader();
                 if (!reader.HasRows) {
                     reader.Close();
@@ -53,34 +54,29 @@ namespace CSharp2SqlLibrary {
                 LoadProductFromSql(product, reader);
 
                 reader.Close();
+                return product;
+            }
+
+        public static Products GetByPk(int id) {
+            var sqlcmd = new SqlCommand(SqlGetByPk, Connection.sqlConnection);
+            sqlcmd.Parameters.AddWithValue("@Id", id);
+            var reader = sqlcmd.ExecuteReader();
+            if (!reader.HasRows) {
+                reader.Close();
+                return null;
+            }
+            reader.Read();
+            var product = new Products();
+            LoadProductFromSql(product, reader);
+
+            reader.Close();
 
             Vendors.Connection = Connection;
             var vendor = Vendors.GetByPk(product.VendorID);
             product.Vendor = vendor;
 
-                return product;
-            }
-
-        //public static Products GetByCode(int code) {
-        //    var sqlcmd = new SqlCommand(SqlGetByPk, Connection.sqlConnection);
-        //    sqlcmd.Parameters.AddWithValue("@Code", code);
-        //    var reader = sqlcmd.ExecuteReader();
-        //    if (!reader.HasRows) {
-        //        reader.Close();
-        //        return null;
-        //    }
-        //    reader.Read();
-        //    var productcode = new Products();
-        //    LoadProductFromSql(productcode, reader);
-
-        //    reader.Close();
-
-        //    Vendors.Connection = Connection;
-        //    var vendor = Vendors.GetByPk(productcode.VendorID);
-        //    productcode.Vendor = vendor;
-
-        //    return productcode;
-        //}
+            return product;
+        }
 
         public static bool Insert(Products product) {
             var sqlcmd = new SqlCommand(SqlInsert, Connection.sqlConnection);
@@ -116,7 +112,7 @@ namespace CSharp2SqlLibrary {
             sqlcmd.Parameters.AddWithValue("@VendorId", product.VendorID);
         }
 
-        private static void LoadProductFromSql(Products product, SqlDataReader reader) {
+        public static void LoadProductFromSql(Products product, SqlDataReader reader) {
             product.ID = (int)reader["Id"];
             product.PartNbr = reader["PartNbr"].ToString();
             product.Name = reader["Name"].ToString();
