@@ -61,40 +61,60 @@ namespace CSharp2SqlLibrary {
                 return product;
             }
 
-        //Need to create GetByCode 
+        //public static Products GetByCode(int code) {
+        //    var sqlcmd = new SqlCommand(SqlGetByPk, Connection.sqlConnection);
+        //    sqlcmd.Parameters.AddWithValue("@Code", code);
+        //    var reader = sqlcmd.ExecuteReader();
+        //    if (!reader.HasRows) {
+        //        reader.Close();
+        //        return null;
+        //    }
+        //    reader.Read();
+        //    var productcode = new Products();
+        //    LoadProductFromSql(productcode, reader);
 
-        // need to include product.VendorID
-        //public static bool Insert(Products product) {
-        //    var sqlcmd = new SqlCommand(SqlInsert, Connection.sqlConnection);
-        //    SetParameterValues(product, sqlcmd);
-        //    var rowsAffected = sqlcmd.ExecuteNonQuery();
-        //    return rowsAffected == 1;
+        //    reader.Close();
+
+        //    Vendors.Connection = Connection;
+        //    var vendor = Vendors.GetByPk(productcode.VendorID);
+        //    productcode.Vendor = vendor;
+
+        //    return productcode;
         //}
 
-        //public static bool Delete(int id) {
-        //    var sqlcmd = new SqlCommand(SqlDelete, Connection.sqlConnection);
-        //    var rowsAffected = sqlcmd.ExecuteNonQuery();
-        //    return rowsAffected == 1;
-        //}
+        public static bool Insert(Products product) {
+            var sqlcmd = new SqlCommand(SqlInsert, Connection.sqlConnection);
+            SetParameterValues(product, sqlcmd);
+            var rowsAffected = sqlcmd.ExecuteNonQuery();
+            return rowsAffected == 1;
+        }
 
-        //public static bool Update(Products product) {
-        //    var sqlcmd = new SqlCommand(SqlUpdate, Connection.sqlConnection);
-        //    SetParameterValues(product, sqlcmd);
-        //    var rowsAffected = sqlcmd.ExecuteNonQuery();
-        //    return rowsAffected == 1;
-        //}
+        public static bool Update(Products product) {
+            var sqlcmd = new SqlCommand(SqlUpdate, Connection.sqlConnection);
+            SetParameterValues(product, sqlcmd);
+            sqlcmd.Parameters.AddWithValue("@Id", product.ID);
+            var rowsAffected = sqlcmd.ExecuteNonQuery();
+            return rowsAffected == 1;
+        }
 
-        //private static void SetParameterValues(Vendors vendor, SqlCommand sqlcmd) {
-        //    sqlcmd.Parameters.AddWithValue("@Id", vendor.ID);
-        //    sqlcmd.Parameters.AddWithValue("@Code", vendor.Code);
-        //    sqlcmd.Parameters.AddWithValue("@Name", vendor.Name);
-        //    sqlcmd.Parameters.AddWithValue("@Address", vendor.Address);
-        //    sqlcmd.Parameters.AddWithValue("@City", vendor.City);
-        //    sqlcmd.Parameters.AddWithValue("@State", vendor.State);
-        //    sqlcmd.Parameters.AddWithValue("@Zip", vendor.Zip);
-        //    sqlcmd.Parameters.AddWithValue("@Phone", vendor.Phone);
-        //    sqlcmd.Parameters.AddWithValue("@Email", vendor.Email);
-        //}
+        public static bool Delete(int id) {  
+            var sqlcmd = new SqlCommand(SqlDelete, Connection.sqlConnection);
+            sqlcmd.Parameters.AddWithValue("@Id", id);
+            var rowsAffected = sqlcmd.ExecuteNonQuery();
+            return rowsAffected == 1;
+            // or 
+            //public static bool Delete(int id){ 
+            //return Delete(product.ID);
+        }
+
+        private static void SetParameterValues(Products product, SqlCommand sqlcmd) {
+            sqlcmd.Parameters.AddWithValue("@PartNbr", product.PartNbr);
+            sqlcmd.Parameters.AddWithValue("@Name", product.Name);
+            sqlcmd.Parameters.AddWithValue("@Price", product.Price);
+            sqlcmd.Parameters.AddWithValue("@Unit", product.Unit);
+            sqlcmd.Parameters.AddWithValue("@PhotoPath", (object)product.PhotoPath ?? DBNull.Value);
+            sqlcmd.Parameters.AddWithValue("@VendorId", product.VendorID);
+        }
 
         private static void LoadProductFromSql(Products product, SqlDataReader reader) {
             product.ID = (int)reader["Id"];

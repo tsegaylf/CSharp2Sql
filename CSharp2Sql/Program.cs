@@ -18,7 +18,33 @@ namespace CSharp2Sql {
             foreach (var p in products) {
                 //Console.WriteLine($"Product {p.Name} from Vendor {p.Vendor.Name} is priced at {p.Price}");
             }
+
+            var product = new Products() {
+                    PartNbr = "DT52M",
+                    Name = "Digi Screen",
+                    Price = 22,
+                    Unit = "Each",
+                    PhotoPath = null,
+                    VendorID = 1};
+            try {
+                ////INSERT
+                ////var success = Products.Insert(product);
+                ////Update
+                var p = Products.GetByPK(2);
+                p.PartNbr = "4RDF3";
+                var success = Products.Update(p);
+                ////delete
+                //var success = Products.Delete(1);
+            }
+            catch (Exception ex) {
+                Console.WriteLine($"Exception Occured: {ex.Message}");
+            }
         }
+
+            //var p = Products.GetByPK(1);
+            //p.PartNbr = "WEFk4";
+            //p.Name = "Echo 2";
+            //var success = Products.Update(p);
 
 
         void RunVendorsTest() {
